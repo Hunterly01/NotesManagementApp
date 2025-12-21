@@ -14,4 +14,5 @@ public class Note {
     private String content;
     private LocalDateTime created = LocalDateTime.now();
     private LocalDateTime updated = LocalDateTime.now();
+    private User user;
 }
