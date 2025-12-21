@@ -1,9 +1,12 @@
 package org.example.utils;
 
+import org.example.data.models.Note;
 import org.example.data.models.User;
 import org.example.dtos.requests.LoginRequest;
+import org.example.dtos.requests.NoteRequest;
 import org.example.dtos.requests.RegisterRequest;
 import org.example.dtos.responses.LoginResponse;
+import org.example.dtos.responses.NoteResponse;
 import org.example.dtos.responses.RegisterResponse;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -33,5 +36,21 @@ public class Mapper {
        response.setMessage("Login Successfully");
        response.setEmail(savedUser.getEmail());
        return response;
+    }
+    public static Note mapNoteRequest(NoteRequest noteRequest) {
+       Note note = new Note();
+       note.setId(noteRequest.getId());
+       note.setTitle(noteRequest.getTitle());
+       note.setContent(noteRequest.getContent());
+       note.setDescription(noteRequest.getDescription());
+       note.setCreated(LocalDateTime.now());
+       return note;
+    }
+    public static NoteResponse mapNoteResponse(Note savedNote) {
+       NoteResponse noteResponse = new NoteResponse();
+       noteResponse.setId(savedNote.getId());
+       noteResponse.setTitle(savedNote.getTitle());
+       noteResponse.setContent(savedNote.getContent());
+       return noteResponse;
     }
 }
