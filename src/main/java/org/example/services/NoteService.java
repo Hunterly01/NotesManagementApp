@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.dtos.requests.LockNoteRequest;
 import org.example.dtos.requests.NoteRequest;
 import org.example.dtos.responses.NoteResponse;
 
@@ -10,4 +11,6 @@ public interface NoteService {
     NoteResponse updateNote(NoteRequest noteRequest);
     void deleteNote(String tittle);
     List<NoteResponse> viewAllNotes();
+    NoteResponse lockNote(LockNoteRequest lockNoteRequest);
+    NoteResponse unlockNote(LockNoteRequest lockNoteRequest);
 }
