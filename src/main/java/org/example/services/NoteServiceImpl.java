@@ -2,6 +2,7 @@ package org.example.services;
 
 import org.example.data.models.Note;
 import org.example.data.repositories.NoteRepository;
+import org.example.dtos.requests.DeleteNoteRequest;
 import org.example.dtos.requests.LockNoteRequest;
 import org.example.dtos.requests.NoteRequest;
 import org.example.dtos.responses.NoteResponse;
@@ -44,8 +45,8 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void deleteNote(String tittle) {
-        Note note = noteRepository.findByTitle(tittle).orElseThrow(() -> new TittleDoesntExistException("Note with title doesn't exist!"));
+    public void deleteNote(DeleteNoteRequest deleteNoteRequest) {
+        Note note = noteRepository.findByTitle(deleteNoteRequest.getTitle()).orElseThrow(() -> new TittleDoesntExistException("Note with title doesn't exist!"));
         noteRepository.delete(note);
     }
 

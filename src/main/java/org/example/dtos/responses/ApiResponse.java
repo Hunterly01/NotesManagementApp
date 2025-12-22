@@ -8,4 +8,6 @@ import lombok.Data;
 public class ApiResponse {
     private boolean isSuccessful;
     private Object data;
+
+
 }
