@@ -15,4 +15,6 @@ public class Note {
     private LocalDateTime created = LocalDateTime.now();
     private LocalDateTime updated = LocalDateTime.now();
     private User user;
+    private boolean Locked =  false;
+    private String password;
 }
