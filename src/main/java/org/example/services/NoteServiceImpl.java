@@ -2,10 +2,14 @@ package org.example.services;
 
 import org.example.data.models.Note;
 import org.example.data.repositories.NoteRepository;
+import org.example.dtos.requests.LockNoteRequest;
 import org.example.dtos.requests.NoteRequest;
 import org.example.dtos.responses.NoteResponse;
+import org.example.exceptions.InvalidCredentialException;
+import org.example.exceptions.NoteIsLockedException;
 import org.example.exceptions.TittleAlreadyExistException;
 import org.example.exceptions.TittleDoesntExistException;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,4 +58,35 @@ public class NoteServiceImpl implements NoteService {
         }
         return noteResponses;
     }
+
+    @Override
+    public NoteResponse lockNote(LockNoteRequest lockNoteRequest) {
+        Note note = noteRepository.findByTitle(lockNoteRequest.getNoteTitle()).orElseThrow(() -> new TittleDoesntExistException("Note with title doesn't exist!"));
+        if(note.isLocked()){
+            throw new NoteIsLockedException("Note with title already locked!");
+        }
+        String hashedPassword = BCrypt.hashpw(lockNoteRequest.getPassword(), BCrypt.gensalt(12));
+        note.setLocked(true);
+        note.setPassword(hashedPassword);
+        Note savedNote = noteRepository.save(note);
+        return mapNoteResponse(savedNote);
+
+    }
+
+    @Override
+    public NoteResponse unlockNote(LockNoteRequest lockNoteRequest) {
+        Note note = noteRepository.findByTitle(lockNoteRequest.getNoteTitle()).orElseThrow(() -> new TittleDoesntExistException("Note with title doesn't exist!"));
+        if(!note.isLocked()){
+            throw new NoteIsLockedException("Note is not locked!");
+        }
+        if(!BCrypt.checkpw(lockNoteRequest.getPassword(), note.getPassword())){
+            throw new InvalidCredentialException("invalid credential!");
+        }
+        note.setLocked(false);
+        note.setPassword(null);
+        Note savedNote = noteRepository.save(note);
+        return mapNoteResponse(savedNote);
+    }
+
+
 }
